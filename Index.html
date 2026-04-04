@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AXON - المساعد الذكي</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: 'Cairo', sans-serif;
+  background: linear-gradient(135deg, #0a0a1a, #0f172a);
+  direction: rtl;
+  min-height: 100vh;
+}
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.login-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0a0a1a, #1a1a2e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.login-card {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(12px);
+  border-radius: 32px;
+  padding: 50px;
+  width: 400px;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.axon-logo {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 20px;
+  background: white;
+  border-radius: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 4px #f39c12, 0 0 0 8px rgba(243,156,18,0.3);
+}
+.axon-logo span {
+  font-size: 65px;
+  font-weight: 900;
+  color: #f39c12;
+}
+.login-card h2 {
+  color: #f39c12;
+  font-size: 2rem;
+}
+.login-card p {
+  color: #aaa;
+  margin-bottom: 25px;
+}
+.login-card input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  text-align: center;
+}
+.login-card button {
+  width: 100%;
+  padding: 12px;
+  background: #f39c12;
+  color: #1a1a2e;
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.error-msg { color: #e74c3c; margin-top: 10px; }
+.main-app { display: none; }
+.header {
+  background: linear-gradient(135deg, #0a3d7c, #0056b3);
+  padding: 15px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 16px;
+  margin-bottom: 20px;
+}
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.logo-circle {
+  width: 50px;
+  height: 50px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.logo-circle span { font-size: 28px; font-weight: bold; color: #f39c12; }
+.logo-area h1 { color: white; font-size: 1.5rem; }
+.logo-area h1 small { display: block; font-size: 0.7rem; color: #f39c12; }
+.user-area button {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 25px;
+  color: white;
+  cursor: pointer;
+}
+.chat-container {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  height: 65vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.messages-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+.message {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 12px;
+}
+.user-message { justify-content: flex-end; }
+.user-message .bubble {
+  background: #f39c12;
+  color: #1a1a2e;
+}
+.bot-message .bubble {
+  background: rgba(255,255,255,0.1);
+  color: white;
+}
+.avatar {
+  width: 40px;
+  height: 40px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bubble {
+  max-width: 70%;
+  padding: 12px 18px;
+  border-radius: 20px;
+  line-height: 1.5;
+}
+.bubble img { max-width: 200px; border-radius: 12px; margin-top: 8px; }
+.input-area {
+  display: flex;
+  gap: 12px;
+  padding: 20px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.input-area input {
+  flex: 1;
+  padding: 14px;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  border-radius: 30px;
+  color: white;
+  font-size: 16px;
+}
+.input-area input::placeholder { color: #888; }
+.input-area button {
+  background: #f39c12;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.image-tools {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.image-tools button {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 8px 16px;
+  border-radius: 25px;
+  color: white;
+  cursor: pointer;
+}
+.image-tools button:hover { background: #f39c12; color: #1a1a2e; }
+.file-input { display: none; }
+.loading { text-align: center; padding: 20px; color: #f39c12; }
+.model-status {
+  background: rgba(0,0,0,0.5);
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 12px;
+  margin-bottom: 10px;
+  text-align: center;
+  color: #f39c12;
+}
+</style>
+</head>
+<body>
+
+<div id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <div class="axon-logo"><span>A</span></div>
+    <h2>AXON</h2>
+    <p>المساعد الذكي بالذكاء الاصطناعي</p>
+    <input type="password" id="loginPass" placeholder="كلمة السر">
+    <button onclick="checkLogin()">دخول</button>
+    <div id="loginError" class="error-msg"></div>
+  </div>
+</div>
+
+<div id="mainApp" class="main-app">
+  <div class="container">
+    <div class="header">
+      <div class="logo-area">
+        <div class="logo-circle"><span>A</span></div>
+        <h1>AXON <small>AI Assistant</small></h1>
+      </div>
+      <div class="user-area">
+        <button onclick="logout()">🚪 خروج</button>
+      </div>
+    </div>
+
+    <div class="image-tools">
+      <button onclick="document.getElementById('imageUpload').click()">📷 تحليل صورة</button>
+      <button onclick="generateImage()">🎨 تصميم صورة</button>
+      <input type="file" id="imageUpload" accept="image/*" style="display:none" onchange="handleImage(this)">
+    </div>
+
+    <div class="chat-container">
+      <div class="model-status" id="modelStatus">🤖 AXON جاهز للعمل</div>
+      <div class="messages-area" id="messagesArea">
+        <div class="message bot-message">
+          <div class="avatar">🤖</div>
+          <div class="bubble">مرحباً! أنا AXON، مساعدك الذكي. اسألني أي شيء، أو ارفع صورة لتحليلها، أو اطلب مني تصميم صورة لك! ✨</div>
+        </div>
+      </div>
+      <div class="input-area">
+        <input type="text" id="userInput" placeholder="اكتب رسالتك هنا..." onkeypress="if(event.key==='Enter') sendMessage()">
+        <button onclick="sendMessage()">📤 إرسال</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentUser = null;
+let conversationHistory = [];
+
+function checkLogin() {
+  let pass = document.getElementById('loginPass').value;
+  if (pass === 'axon2024') {
+    currentUser = 'user';
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
+    loadMessages();
+  } else {
+    document.getElementById('loginError').innerText = '❌ كلمة سر خاطئة';
+  }
+}
+
+function logout() {
+  currentUser = null;
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('mainApp').style.display = 'none';
+  document.getElementById('loginPass').value = '';
+}
+
+function addMessage(sender, text, isHtml = false) {
+  const area = document.getElementById('messagesArea');
+  const msgDiv = document.createElement('div');
+  msgDiv.className = `message ${sender === 'user' ? 'user-message' : 'bot-message'}`;
+  if (isHtml) {
+    msgDiv.innerHTML = `<div class="avatar">${sender === 'user' ? '👤' : '🤖'}</div><div class="bubble">${text}</div>`;
+  } else {
+    msgDiv.innerHTML = `<div class="avatar">${sender === 'user' ? '👤' : '🤖'}</div><div class="bubble">${text.replace(/\n/g, '<br>')}</div>`;
+  }
+  area.appendChild(msgDiv);
+  area.scrollTop = area.scrollHeight;
+  if (sender !== 'user') {
+    conversationHistory.push({ role: 'assistant', content: text });
+    localStorage.setItem('axon_chat', JSON.stringify(conversationHistory));
+  }
+}
+
+function loadMessages() {
+  const saved = localStorage.getItem('axon_chat');
+  if (saved) {
+    conversationHistory = JSON.parse(saved);
+    const area = document.getElementById('messagesArea');
+    area.innerHTML = '';
+    conversationHistory.forEach(msg => {
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `message ${msg.role === 'user' ? 'user-message' : 'bot-message'}`;
+      msgDiv.innerHTML = `<div class="avatar">${msg.role === 'user' ? '👤' : '🤖'}</div><div class="bubble">${msg.content.replace(/\n/g, '<br>')}</div>`;
+      area.appendChild(msgDiv);
+    });
+    area.scrollTop = area.scrollHeight;
+  }
+}
+
+async function sendMessage() {
+  const input = document.getElementById('userInput');
+  const text = input.value.trim();
+  if (!text) return;
+  
+  addMessage('user', text);
+  input.value = '';
+  conversationHistory.push({ role: 'user', content: text });
+  localStorage.setItem('axon_chat', JSON.stringify(conversationHistory));
+  
+  addMessage('bot', '🤔 جاري التفكير...');
+  const loadingMsg = document.querySelector('.bot-message:last-child .bubble');
+  
+  // ردود ذكية مبنية على الكلمات المفتاحية
+  setTimeout(() => {
+    let response = generateSmartResponse(text);
+    loadingMsg.innerText = response;
+    conversationHistory[conversationHistory.length - 1].content = response;
+    localStorage.setItem('axon_chat', JSON.stringify(conversationHistory));
+  }, 500);
+}
+
+function generateSmartResponse(question) {
+  const q = question.toLowerCase();
+  
+  if (q.includes('مرحب') || q.includes('السلام') || q.includes('اهلا')) {
+    return "وعليكم السلام ورحمة الله! 👋 أنا AXON، مساعدك الذكي. كيف يمكنني مساعدتك اليوم؟";
+  }
+  else if (q.includes('اسمك') || q.includes('مين انت')) {
+    return "أنا AXON 🤖، مساعد ذكي مصمم خصيصاً لمساعدتك في حل المشكلات والإجابة على أسئلتك!";
+  }
+  else if (q.includes('شكرا') || q.includes('جزاك')) {
+    return "العفو! 😊 شكراً لك على كلامك الجميل. أنا هنا دائماً لخدمتك!";
+  }
+  else if (q.includes('كيف حالك')) {
+    return "أنا بخير والحمد لله! 🤖 جاهز ومتحمس لمساعدتك. كيف يمكنني خدمتك اليوم؟";
+  }
+  else if (q.includes('صور') || q.includes('تصميم')) {
+    return "🎨 يمكنك استخدام زر '🎨 تصميم صورة' في الأعلى لإنشاء صور بالذكاء الاصطناعي! فقط اكتب وصف للصورة التي تريدها.";
+  }
+  else if (q.includes('مشكلة') || q.includes('حل')) {
+    return "🔧 سأساعدك في حل مشكلتك! يرجى توضيح المشكلة بالتفصيل، وسأبذل قصارى جهدي لإيجاد الحل المناسب.";
+  }
+  else if (q.includes('برمجة') || q.includes('كود') || q.includes('برنامج')) {
+    return "💻 برمجة! مجال رائع. أخبرني ما الذي تريد برمجته بالضبط؟ سأساعدك بكتابة الكود أو شرح الفكرة.";
+  }
+  else if (q.includes('الوقت') || q.includes('الساعة')) {
+    const now = new Date();
+    return `🕐 الساعة الآن ${now.getHours()}:${now.getMinutes().toString().padStart(2,'0')} بتوقيت مصر.`;
+  }
+  else if (q.includes('وداعا') || q.includes('مع السلامة')) {
+    return "وداعاً! 👋 كان سعيداً بمساعدتك. عد في أي وقت، أنا هنا دائماً!";
+  }
+  else {
+    return `💡 سؤال ممتاز! "${question}"\n\nأنا AXON، مساعدك الذكي. حالياً أنا في طور التعلم المستمر. هل يمكنك توضيح سؤالك أكثر؟ سأبذل قصارى جهدي لمساعدتك! 🤖✨\n\nأو يمكنك استخدام زر 🎨 تصميم صورة لإنشاء صور، أو 📷 تحليل صورة لرفع صورة وتحليلها.`;
+  }
+}
+
+function handleImage(input) {
+  if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    addMessage('user', '📷 [تم رفع صورة]', true);
+    addMessage('bot', `🖼️ تم استلام الصورة بنجاح!<br><br>📌 حجم الصورة: ${(file.size / 1024).toFixed(2)} كيلوبايت<br>📌 نوع الملف: ${file.type}<br><br>✨ ماذا تريد أن أعرفك عن هذه الصورة؟ صف لي ما تراه وسأحاول مساعدتك.`, true);
+  };
+  reader.readAsDataURL(file);
+  input.value = '';
+}
+
+function generateImage() {
+  const prompt = prompt('🎨 صف الصورة التي تريد تصميمها:', 'روبوت ذكي اسمه AXON بخلفية تكنولوجية ذهبية');
+  if (!prompt) return;
+  addMessage('user', `🎨 طلب تصميم صورة: ${prompt}`);
+  
+  // استخدام خدمة مجانية لإنشاء الصور
+  const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt + '، تصميم عصري، جودة عالية، ألوان ذهبية وزرقاء، تقنية')}?width=800&height=600&nologo=true`;
+  
+  addMessage('bot', `🎨 تم إنشاء الصورة!<br><br><img src="${imageUrl}" style="max-width:100%; border-radius:16px; margin-top:8px;"><br><br>✨ هل أعجبتك الصورة؟ يمكنك طلب تعديلها أو تصميم صورة أخرى!`, true);
+}
+</script>
+</body>
+</html>
